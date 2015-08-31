@@ -10,8 +10,6 @@ from pygame.locals import *
 area = SCREEN_WIDTH, SCREEN_HEIGHT = 800,600
 HEIGHT = 10
 WIDTH = 10
-S_HEIGHT = 10
-S_WIDTH = 10
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 GREEN = (0,255,0)
@@ -28,7 +26,8 @@ pygame.display.set_caption("Classic Snake")
 
 clock = pygame.time.Clock()
 
-#display the current score of the user (10 points per fruit)
+
+#scoreboard(score): display the current score of the user (10 points per fruit)
 def scoreboard(score):
     font = pygame.font.Font("freesansbold.ttf", 20)
     text = font.render("Score: " + str(score), True, WHITE)
@@ -41,13 +40,13 @@ def fruit(x, y, width, height, colour):
 
 #s_head(x,y): shifts the snake head x pixels right and y pixels down
 def s_head(x,y):
-    pygame.draw.rect(screen, GREEN, [x,y,S_WIDTH,S_HEIGHT]) 
+    pygame.draw.rect(screen, GREEN, [x,y,WIDTH,HEIGHT]) 
 
    
 
 #text_objects(text,font): draws the text on a new surface. Also gives the dimensions of the rectangle encasing the text
 def text_objects(text, font):
-    textSurface = font.render(text, True, BLUE)
+    textSurface = font.render(text, True, WHITE)
     return textSurface, textSurface.get_rect()
 
 
@@ -65,10 +64,7 @@ def message_display(text):
 
 #crash(): Lets the user know they have crashed using the message_display function
 def crash():
-    message_display("You Crashed")
-
-
-
+    message_display("GAME OVER")
 
 def game():
 
@@ -79,10 +75,11 @@ def game():
     y_change = 0
     speed = 2
 
-    fruit_x = random.randrange(0,SCREEN_WIDTH)
-    fruit_y = random.randrange(0, SCREEN_HEIGHT)
+    fruit_x = random.randrange(0,SCREEN_WIDTH-WIDTH)
+    fruit_y = random.randrange(0, SCREEN_HEIGHT-HEIGHT)
     curScore = 0
-    
+
+#game loop
     start = True
     while start:
         for event in pygame.event.get():
@@ -115,7 +112,8 @@ def game():
         # changing location of snake head
         s_head(x,y)
         scoreboard(curScore)
-        
+
+        new = pygame.draw.rect(screen,WHITE,[SCREEN_WIDTH+10, SCREEN_HEIGHT + 10, WIDTH, HEIGHT])
         #making the window "boundary-less"
         if x < 0 or x > SCREEN_WIDTH:
             x = SCREEN_WIDTH - x
@@ -125,11 +123,10 @@ def game():
         #eating the fruit
         if x >= fruit_x and x <= fruit_x + WIDTH or x + WIDTH >= fruit_x and x + WIDTH <= fruit_x + WIDTH:
             if y >= fruit_y and y <= fruit_y + HEIGHT or y +HEIGHT >= fruit_y and y + HEIGHT<= fruit_y + HEIGHT:
-                fruit_y = random.randrange(0,SCREEN_HEIGHT)
-                fruit_x = random.randrange(0, SCREEN_WIDTH)
+                fruit_y = random.randrange(0,SCREEN_HEIGHT-HEIGHT)
+                fruit_x = random.randrange(0, SCREEN_WIDTH-WIDTH)
                 curScore+=10
                 speed+= 0.2
-       
         
         pygame.display.update()
         clock.tick(60)
