@@ -20,7 +20,7 @@ DBLUE = (0,0,122)
 pygame.init()
 
 screen = pygame.display.set_mode(area)
-pygame.display.set_caption("Classic Snake")
+pygame.display.set_caption("Snake")
 
 
 
@@ -32,17 +32,6 @@ def scoreboard(score):
     font = pygame.font.Font("freesansbold.ttf", 20)
     text = font.render("Score: " + str(score), True, WHITE)
     screen.blit(text,(0,0))
-
-#drawing the fruit
-def fruit(x, y, width, height, colour):
-    pygame.draw.rect(screen, colour, [x,y,width,height])
-    
-
-#s_head(x,y): shifts the snake head x pixels right and y pixels down
-def s_head(x,y):
-    pygame.draw.rect(screen, GREEN, [x,y,WIDTH,HEIGHT]) 
-
-   
 
 #text_objects(text,font): draws the text on a new surface. Also gives the dimensions of the rectangle encasing the text
 def text_objects(text, font):
@@ -59,25 +48,43 @@ def message_display(text):
     
     pygame.display.update()
     time.sleep(2)
-    game()
-    
+    game() 
 
 #crash(): Lets the user know they have crashed using the message_display function
 def crash():
     message_display("GAME OVER")
 
+
+#drawing the fruit
+def fruit(x, y, width, height, colour):
+    pygame.draw.rect(screen, colour, [x,y,width,height])
+    
+
+#s_head(x,y): shifts the snake head x pixels right and y pixels down
+def s_head(x,y):
+    pygame.draw.rect(screen, GREEN, [x,y,WIDTH,HEIGHT])
+
+
+
+
+
 def game():
 
     x = SCREEN_WIDTH * 0.45
     y = SCREEN_HEIGHT * 0.5
+    snakeBlocks = []
 
     x_change = 0
     y_change = 0
     speed = 2
 
+   # s_head = snake(screen, x,y)
+    
     fruit_x = random.randrange(0,SCREEN_WIDTH-WIDTH)
     fruit_y = random.randrange(0, SCREEN_HEIGHT-HEIGHT)
     curScore = 0
+    snakeBlocks = [(x,y), (x+10, y+10)]
+    
 
 #game loop
     start = True
@@ -110,7 +117,11 @@ def game():
         fruit(fruit_x, fruit_y, WIDTH, HEIGHT, BLUE)
         
         # changing location of snake head
-        s_head(x,y)
+        for (x,y) in snakeBlocks:
+            s_head(x,y)
+
+            
+      # s_head(screen,x,y)
         scoreboard(curScore)
 
         new = pygame.draw.rect(screen,WHITE,[SCREEN_WIDTH+10, SCREEN_HEIGHT + 10, WIDTH, HEIGHT])
@@ -127,6 +138,9 @@ def game():
                 fruit_x = random.randrange(0, SCREEN_WIDTH-WIDTH)
                 curScore+=10
                 speed+= 0.2
+                
+                
+                
         
         pygame.display.update()
         clock.tick(60)
