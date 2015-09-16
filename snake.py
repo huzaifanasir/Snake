@@ -65,9 +65,6 @@ def s_head(x,y):
     pygame.draw.rect(screen, GREEN, [x,y,WIDTH,HEIGHT])
 
 
-
-
-
 def game():
 
     x = SCREEN_WIDTH * 0.45
@@ -83,7 +80,9 @@ def game():
     fruit_x = random.randrange(0,SCREEN_WIDTH-WIDTH)
     fruit_y = random.randrange(0, SCREEN_HEIGHT-HEIGHT)
     curScore = 0
-    snakeBlocks = [(x,y), (x+10, y+10)]
+    snakeBlocks = [[x,y], [x+10,y], [x+20, y]]#x,y+10), (x, y+20)]
+    i =0
+    incr = 10
     
 
 #game loop
@@ -110,21 +109,21 @@ def game():
                 elif event.key == pygame.K_DOWN:
                     y_change = speed
                     x_change = 0
-        x += x_change
-        y += y_change
+
         screen.fill(BLACK)
         # creating fruit
         fruit(fruit_x, fruit_y, WIDTH, HEIGHT, BLUE)
+        x+= x_change
+        y+= y_change
+        for item in snakeBlocks:
+            item[0] += x_change
+            item[1] += y_change
+            s_head(item[0], item[1])
         
-        # changing location of snake head
-        for (x,y) in snakeBlocks:
-            s_head(x,y)
 
-            
-      # s_head(screen,x,y)
-        scoreboard(curScore)
+        
 
-        new = pygame.draw.rect(screen,WHITE,[SCREEN_WIDTH+10, SCREEN_HEIGHT + 10, WIDTH, HEIGHT])
+        
         #making the window "boundary-less"
         if x < 0 or x > SCREEN_WIDTH:
             x = SCREEN_WIDTH - x
@@ -137,8 +136,7 @@ def game():
                 fruit_y = random.randrange(0,SCREEN_HEIGHT-HEIGHT)
                 fruit_x = random.randrange(0, SCREEN_WIDTH-WIDTH)
                 curScore+=10
-                speed+= 0.2
-                
+                speed+= 0.1
                 
                 
         
